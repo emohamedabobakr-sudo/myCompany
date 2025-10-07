@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from "react";
 
-export default function ImageSlider({ projects }) {
+export default function ImageSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sliderImages, setSliderImages] = useState([]);
 
-  // ✅ نجمع كل الصور من المشاريع اللي جاية من App.js (اللي فيها المسارات الصحيحة)
+  // ✅ نجيب الصور من data.json من مجلد public
   useEffect(() => {
-    if (projects && projects.length > 0) {
-      const imgs = projects
-        .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
-        .map((img) =>
-          img.startsWith("http")
-            ? img
-            : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
-        )
-        .filter(Boolean);
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${process.env.PUBLIC_URL}/data.json`);
+        const data = await response.json();
 
-      setSliderImages(imgs);
-    }
-  }, [projects]);
+        if (Array.isArray(data.projects)) {
+          const imgs = data.projects
+            .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
+            .map((img) =>
+              img.startsWith("http")
+                ? img
+                : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
+            )
+            .filter(Boolean);
 
-  // ✅ نغير الصورة كل 3 ثواني تلقائيًا
+          setSliderImages(imgs);
+        }
+      } catch (err) {
+        console.error("❌ Error fetching images:", err);
+      }
+    };
+
+    fetchImages();
+  }, []);
+
+  // ✅ نغير الصورة كل 3 ثواني
   useEffect(() => {
     if (sliderImages.length === 0) return;
     const id = setInterval(() => {
       setCurrentIndex((s) => (s + 1) % sliderImages.length);
     }, 3000);
     return () => clearInterval(id);
-  }, [sliderImages.length]);
+  }, [sliderImages]);
 
   if (sliderImages.length === 0) return null;
 
