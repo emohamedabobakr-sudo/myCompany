@@ -4,7 +4,7 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import PortfolioGrid from "./components/PortfolioGrid";
-import ImageSlider from "./components/ImageSlider"; // ✅ السلايدر
+import ImageSlider from "./components/ImageSlider";
 import "./App.css";
 
 function App() {
@@ -13,11 +13,11 @@ function App() {
   const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/data.json`)
+    fetch("./data.json") // ✅ استخدم المسار النسبي بدل process.env.PUBLIC_URL
       .then((res) => res.json())
       .then((data) => {
         if (data?.projects) {
-          // ✅ نعدّل المسارات علشان الصور تشتغل بعد النشر
+          // ✅ نضيف المسار الكامل للصور بناءً على PUBLIC_URL
           const fixedProjects = data.projects.map((p) => ({
             ...p,
             images: p.images?.map((img) =>
@@ -32,7 +32,6 @@ function App() {
       .catch((err) => console.error("Error loading projects:", err));
   }, []);
 
-  // ✅ لو المستخدم اختار مشروع معين
   if (selectedProject) {
     return (
       <div>
@@ -44,6 +43,7 @@ function App() {
 
           <h2 className="cjdic">{selectedProject.title}</h2>
           <p className="cjdic">{selectedProject.description}</p>
+
           {selectedProject.location && (
             <p className="cjdic">
               <strong>Location:</strong> {selectedProject.location}
@@ -71,26 +71,23 @@ function App() {
     );
   }
 
-  // ✅ الصفحة العادية (Home + باقي الصفحات)
   return (
     <div>
       <Navbar setPage={setPage} />
 
       {page === "home" && (
         <div>
-          {/* ✅ السلايدر فوق */}
           <ImageSlider projects={projects} />
 
-          {/* ✅ الجريد تحت */}
           <div className="home-gallery">
             {projects.map((project) =>
               project.images?.length > 0 ? (
                 <img
                   key={project.id}
-                  src={project.images[0]} // أول صورة فقط
+                  src={project.images[0]}
                   alt={project.title}
                   className="home-image"
-                  onClick={() => setSelectedProject(project)} // ✅ فتح التفاصيل عند الضغط
+                  onClick={() => setSelectedProject(project)}
                 />
               ) : null
             )}

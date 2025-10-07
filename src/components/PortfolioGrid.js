@@ -1,4 +1,3 @@
-// src/components/PortfolioGrid.jsx
 import React, { useEffect, useState } from "react";
 import "../App.css";
 
@@ -6,7 +5,7 @@ const resolveAsset = (p) => {
   if (!p) return "";
   if (p.startsWith("http")) return p;
   const cleaned = p.startsWith("/") ? p : `/${p}`;
-  return `${process.env.PUBLIC_URL}${cleaned}`;
+  return `${process.env.PUBLIC_URL}${cleaned}`; // ✅ هنا نضيف PUBLIC_URL
 };
 
 const PortfolioGrid = ({ setSelectedProject }) => {
@@ -14,13 +13,18 @@ const PortfolioGrid = ({ setSelectedProject }) => {
   const [currentIndexes, setCurrentIndexes] = useState({});
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/data.json`)
+    fetch("./data.json") // ✅ نفس التعديل هنا
       .then((res) => res.json())
       .then((data) => {
         if (data?.projects) {
-          setProjects(data.projects);
+          const fixed = data.projects.map((p) => ({
+            ...p,
+            images: p.images?.map((img) => resolveAsset(img)),
+          }));
+          setProjects(fixed);
+
           const initialIndexes = {};
-          data.projects.forEach((p) => {
+          fixed.forEach((p) => {
             if (Array.isArray(p.images) && p.images.length > 0) {
               initialIndexes[p.id] = 0;
             }
