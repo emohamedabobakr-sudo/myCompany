@@ -5,24 +5,24 @@ const PortfolioGrid = ({ setSelectedProject }) => {
   const [projects, setProjects] = useState([]);
   const [currentIndexes, setCurrentIndexes] = useState({});
 
-  useEffect(() => {
-    fetch("/data.json")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.projects) {
-          setProjects(data.projects);
+useEffect(() => {
+  fetch(process.env.PUBLIC_URL + "/data.json")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data?.projects) {
+        setProjects(data.projects);
+        const initialIndexes = {};
+        data.projects.forEach((p) => {
+          if (p.images?.length > 0) {
+            initialIndexes[p.id] = 0;
+          }
+        });
+        setCurrentIndexes(initialIndexes);
+      }
+    })
+    .catch((err) => console.error("Error loading projects:", err));
+}, []);
 
-          const initialIndexes = {};
-          data.projects.forEach((p) => {
-            if (p.images?.length > 0) {
-              initialIndexes[p.id] = 0;
-            }
-          });
-          setCurrentIndexes(initialIndexes);
-        }
-      })
-      .catch((err) => console.error("Error loading projects:", err));
-  }, []);
 
   const nextSlide = (id, imagesLength) => {
     setCurrentIndexes((prev) => ({
