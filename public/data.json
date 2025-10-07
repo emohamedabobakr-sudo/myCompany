@@ -1,0 +1,69 @@
+{
+  "projects": [
+    {
+      "id": "p001",
+      "title": "ADD Villa",
+      "description": "A Harmony of Elegance, Comfort, and Timeless Design. AWP Villa redefines luxury living with a seamless blend of modern minimalism and natural materials. Each space within the villa is meticulously curated to reflect sophistication, tranquility, and thoughtful design.",
+      "images": ["/images/10ADD Villa.jpg","/images/2ADD Villa.jpg","/images/9ADD Villa.jpg"],
+      "location": "Dubai",
+      "category":"Residential",
+      "currency": "EGP",
+      "year": 2025
+    },
+    {
+      "id": "p002",
+      "title": "APM Villa",
+      "description": "A statement of elegance, precision, and exclusivity. The AWD Villa is a bespoke luxury residence designed for a distinguished client in Dubai, where contemporary architecture meets timeless sophistication...",
+      "images": ["/images/1WSP Restaurant.jpg","/images/2WSP Restaurant.jpg","/images/4WSP Restaurant.jpg","/images/5WSP Restaurant.jpg","/images/6WSP Restaurant.jpg","/images/7WSP Restaurant.jpg","/images/8WSP Restaurant.jpg","/images/9WSP Restaurant.jpg","/images/11WSP Restaurant.jpg","/images/12WSP Restaurant.jpg","/images/14WSP Restaurant.jpg"],
+      "location": "Dubai",
+      "category":"Residential",
+      "currency": "EGP",
+      "year": 2025
+    },
+    {
+      "id": "p003",
+      "title": "BRG Villa",
+      "description": "The BRG Villa is a Minimalist Contemporary design defined by a sophisticated interplay of bold geometric forms...",
+      "images": ["/images/BRG Villa 1.jpg","/images/BRG Villa 2.jpg","/images/BRG Villa 3.jpg","/images/BRG Villa 4.jpg","/images/BRG Villa 5.jpg","/images/BRG Villa 6.jpg","/images/BRG Villa 7.jpg","/images/BRG Villa 8.jpg","/images/BRG Villa 9.jpg","/images/BRG Villa 10.jpg"],
+      "location": "Dubai",
+      "category": "Residential",
+      "year": 2023
+    },
+    {
+      "id": "p004",
+      "title": "MK Villa",
+      "description": "This villa reimagines contemporary desert living through a sculptural approach rooted in softness, movement, and spatial intimacy. Departing from rigid geometries, the design is defined by fluid lines and gentle curves that carve and mold the building into a dynamic sequence of spaces. The form wraps around a central courtyard and pool, creating a sense of enclosure while maintaining openness to light and breeze.Organic surfaces flow into one another, blurring the boundaries between structure and landscape. The use of curved walls, arched thresholds, and recessed niches lends the architecture a tactile, almost carved quality—inviting both exploration and repose. Natural textures and muted tones amplify the warmth of the desert light, while architectural articulations enhance ventilation and privacy.This design speaks to a more sensual and experiential interpretation of living—one that balances modernity with cultural echoes, offering residents a poetic dialogue between architecture and the natural rhythms of its Dubai setting",
+      "images": ["/images/MK Villa1.jpg","/images/MK Villa2.jpg","/images/MK Villa3.jpg","/images/MK Villa4.jpg"],
+      "location": "Dubai",
+      "category": "Residential",
+      "year": 2005
+    },
+    {
+      "id": "p005",
+      "title": "SHB Villa",
+      "description":"Unveiling Our Exquisite Villa Interior Design in the Heart of the UAE! Discover the epitome of elegance and opulence...",
+      "images": ["/images/SHB Villa1.jpg","/images/SHB Villa2.jpg","/images/SHB Villa3.jpg","/images/SHB Villa4.jpg"],
+      "location": "AL AIN",
+      "category": "Residential",
+      "year": 2024
+    },
+    {
+      "id": "p006",
+      "title": "Songdo Villa",
+      "description": "The Korean Culture, knowledge, The will to thrive and to connect more with the world has been there even before the land of Songdo city has appeared...",
+      "images": ["/images/Songdo library-1.jpg","/images/Songdo library-2.jpg","/images/Songdo library-3.jpg","/images/Songdo library-4.jpg","/images/Songdo library-5.jpg","/images/Songdo library-6.jpg","/images/Songdo library-7.jpg","/images/Songdo library-8.jpg","/images/Songdo library-9.jpg","/images/Songdo library-10.jpg","/images/Songdo library-11.jpg","/images/Songdo library-12.jpg","/images/Songdo library-13.jpg","/images/Songdo library-14.jpg"],
+      "location": "Songdo, South Korea",
+      "category": "Public buildings",
+      "year": 2020
+    },
+    {
+      "id": "p007",
+      "title": "WSP Restaurant",
+      "description": "This is the interior design for WASABI Restaurant, featuring a sophisticated blend of Modern and Industrial styles with warm, rich accents...",
+      "images": ["/images/1WSP Restaurant.jpg","/images/2WSP Restaurant.jpg","/images/4WSP Restaurant.jpg","/images/5WSP Restaurant.jpg","/images/6WSP Restaurant.jpg","/images/7WSP Restaurant.jpg","/images/8WSP Restaurant.jpg","/images/9WSP Restaurant.jpg","/images/10WSP Restaurant.jpg","/images/11WSP Restaurant.jpg","/images/12WSP Restaurant.jpg","/images/14WSP Restaurant.jpg"],
+      "location": "Cairo, Egypt",
+      "category": "Interior design",
+      "year": 2021
+    }
+  ]
+}
