@@ -4,17 +4,13 @@ export default function ImageSlider({ projects }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sliderImages, setSliderImages] = useState([]);
 
-  // ✅ نحضر الصور من كل المشاريع بعد تحميل data.json
+  // ✅ نحضر الصور من كل المشاريع بعد تحميل data.json (من App.js)
   useEffect(() => {
     if (projects && projects.length > 0) {
+      // الصور في App.js أصلاً فيها المسار الصحيح بـ process.env.PUBLIC_URL
+      // فإحنا هنا مش محتاجين نضيفه تاني
       const imgs = projects
         .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
-        // هنا بنضيف PUBLIC_URL قبل كل صورة علشان تشتغل على GitHub Pages
-        .map((img) =>
-          img.startsWith("http")
-            ? img
-            : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
-        )
         .filter(Boolean);
       setSliderImages(imgs);
     }
