@@ -6,7 +6,8 @@ const PortfolioGrid = ({ setSelectedProject }) => {
   const [currentIndexes, setCurrentIndexes] = useState({});
 
 useEffect(() => {
-  fetch(process.env.PUBLIC_URL + "/data.json")
+  fetch(`${process.env.PUBLIC_URL}/data.json`)
+
     .then((res) => res.json())
     .then((data) => {
       if (data?.projects) {
