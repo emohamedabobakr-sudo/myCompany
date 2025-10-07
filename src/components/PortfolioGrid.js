@@ -12,40 +12,43 @@ const PortfolioGrid = ({ setSelectedProject }) => {
   const [projects, setProjects] = useState([]);
   const [currentIndexes, setCurrentIndexes] = useState({});
 
+  // ✅ تحميل الداتا مرة واحدة فقط
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/data.json`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.projects) {
-          const fixed = data.projects.map((p) => ({
+          const fixedProjects = data.projects.map((p) => ({
             ...p,
-            images: p.images?.map((img) => resolveAsset(img)),
+            images: p.images?.map((img) => resolveAsset(img)) || [],
           }));
-          setProjects(fixed);
+          setProjects(fixedProjects);
 
-          const initialIndexes = {};
-          fixed.forEach((p) => {
-            if (Array.isArray(p.images) && p.images.length > 0) {
-              initialIndexes[p.id] = 0;
-            }
+          // ضبط البداية لكل مشروع على أول صورة
+          const initIndexes = {};
+          fixedProjects.forEach((p) => {
+            if (p.images.length > 0) initIndexes[p.id] = 0;
           });
-          setCurrentIndexes(initialIndexes);
+          setCurrentIndexes(initIndexes);
         }
       })
       .catch((err) => console.error("Error loading projects:", err));
   }, []);
 
-  const nextSlide = (id, imagesLength) => {
+  // ✅ وظائف السلايدر
+  const nextSlide = (id, len, e) => {
+    e.stopPropagation();
     setCurrentIndexes((prev) => ({
       ...prev,
-      [id]: ((prev[id] ?? 0) + 1) % imagesLength,
+      [id]: ((prev[id] ?? 0) + 1) % len,
     }));
   };
 
-  const prevSlide = (id, imagesLength) => {
+  const prevSlide = (id, len, e) => {
+    e.stopPropagation();
     setCurrentIndexes((prev) => ({
       ...prev,
-      [id]: ((prev[id] ?? 0) - 1 + imagesLength) % imagesLength,
+      [id]: ((prev[id] ?? 0) - 1 + len) % len,
     }));
   };
 
@@ -54,6 +57,7 @@ const PortfolioGrid = ({ setSelectedProject }) => {
       {projects.map((project) => {
         const images = project.images || [];
         const idx = currentIndexes[project.id] ?? 0;
+
         return (
           <div
             key={project.id}
@@ -61,51 +65,53 @@ const PortfolioGrid = ({ setSelectedProject }) => {
             onClick={() => setSelectedProject(project)}
             style={{ cursor: "pointer" }}
           >
-            <div className="slider">
-              {images.length > 0 ? (
-                <>
-                  <button
-                    className="arrow left"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      prevSlide(project.id, images.length);
-                    }}
-                  >
-                    ❮
-                  </button>
+            {images.length > 0 ? (
+              <div className="slider">
+                {/* الصورة الحالية */}
+                <img
+                  src={images[idx]}
+                  alt={project.title}
+                  style={{ width: "100%", height: "250px", objectFit: "cover" }}
+                />
 
-                  <img
-                    src={images[idx]}
-                    alt={project.title}
-                    style={{ width: "100%", height: "250px", objectFit: "cover" }}
-                  />
+                {/* الأسهم */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      className="arrow left"
+                      onClick={(e) => prevSlide(project.id, images.length, e)}
+                    >
+                      ❮
+                    </button>
 
-                  <button
-                    className="arrow right"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      nextSlide(project.id, images.length);
-                    }}
-                  >
-                    ❯
-                  </button>
+                    <button
+                      className="arrow right"
+                      onClick={(e) => nextSlide(project.id, images.length, e)}
+                    >
+                      ❯
+                    </button>
+                  </>
+                )}
 
-                  <div className="dots" onClick={(e) => e.stopPropagation()}>
-                    {images.map((_, i) => (
-                      <span
-                        key={i}
-                        className={`dot ${idx === i ? "active" : ""}`}
-                        onClick={() =>
-                          setCurrentIndexes((prev) => ({ ...prev, [project.id]: i }))
-                        }
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <p>No images</p>
-              )}
-            </div>
+                {/* النقاط */}
+                <div className="dots" onClick={(e) => e.stopPropagation()}>
+                  {images.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`dot ${idx === i ? "active" : ""}`}
+                      onClick={() =>
+                        setCurrentIndexes((prev) => ({
+                          ...prev,
+                          [project.id]: i,
+                        }))
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p>No images</p>
+            )}
 
             <h3>{project.title}</h3>
           </div>
@@ -116,3 +122,4 @@ const PortfolioGrid = ({ setSelectedProject }) => {
 };
 
 export default PortfolioGrid;
+/*---------------------*/
