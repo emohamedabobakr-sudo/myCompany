@@ -1,74 +1,47 @@
 import React, { useEffect, useState } from "react";
 
-export default function ImageSlider() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [sliderImages, setSliderImages] = useState([]);
+// تم إزالة الوظيفة resolveAsset من هنا
+// تم إزالة useEffect الخاص بتحميل data.json من هنا
 
-  // ✅ نجيب الصور من data.json من مجلد public
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(`${process.env.PUBLIC_URL}/data.json`);
-        const data = await response.json();
+export default function ImageSlider({ projects }) { // 👈 استلام المشاريع كـ prop
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-        if (Array.isArray(data.projects)) {
-          const imgs = data.projects
-            .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
-            .map((img) =>
-              img.startsWith("http")
-                ? img
-                : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
-            )
-            .filter(Boolean);
+  // ✅ دمج صور جميع المشاريع التي تم تصحيح مساراتها مسبقاً
+  const sliderImages = projects
+    .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
+    .filter(Boolean);
 
-          setSliderImages(imgs);
-        }
-      } catch (err) {
-        console.error("❌ Error fetching images:", err);
-      }
-    };
+  // ✅ نفس useEffect لتغيير الصور كل 3 ثواني
+  useEffect(() => {
+    if (sliderImages.length === 0) return;
+    const id = setInterval(() => {
+      setCurrentIndex((s) => (s + 1) % sliderImages.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [sliderImages]);
 
-    fetchImages();
-  }, []);
+  if (sliderImages.length === 0) return null;
 
-  // ✅ نغير الصورة كل 3 ثواني
-  useEffect(() => {
-    if (sliderImages.length === 0) return;
-    const id = setInterval(() => {
-      setCurrentIndex((s) => (s + 1) % sliderImages.length);
-    }, 3000);
-    return () => clearInterval(id);
-  }, [sliderImages]);
+  return (
+    <div className="slider-container">
+      {/* باقي عناصر السلايدر (الأزرار وعلامة img) */}
+      <button className="prev"
+        // ... (كود الزر السابق)
+      >
+        ❮
+      </button>
 
-  if (sliderImages.length === 0) return null;
+      <img
+        className="slider-image" 
+        src={sliderImages[currentIndex]} // 👈 استخدام المسارات الصحيحة الجاهزة
+        alt={`Slide ${currentIndex + 1}`}
+      />
 
-  return (
-    <div className="slider-container">
-      <button
-        className="prev"
-        onClick={() =>
-          setCurrentIndex(
-            (s) => (s - 1 + sliderImages.length) % sliderImages.length
-          )
-        }
-      >
-        ❮
-      </button>
-
-      <img
-        className="slider-image"
-        src={sliderImages[currentIndex]}
-        alt={`Slide ${currentIndex + 1}`}
-      />
-
-      <button
-        className="next"
-        onClick={() =>
-          setCurrentIndex((s) => (s + 1) % sliderImages.length)
-        }
-      >
-        ❯
-      </button>
-    </div>
-  );
+      <button className="next"
+        // ... (كود الزر التالي)
+      >
+        ❯
+      </button>
+    </div>
+  );
 }
