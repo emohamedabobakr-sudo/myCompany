@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import "../App.css";
+import React, { useEffect, useState } from "react";
 
-// 🧩 دالة لتصحيح المسارات
+// ✅ دالة لتصحيح المسار حسب البيئة (local أو GitHub Pages)
 const resolveAsset = (path) => {
   if (!path) return "";
   if (path.startsWith("http")) return path;
@@ -9,61 +8,59 @@ const resolveAsset = (path) => {
   return `${process.env.PUBLIC_URL}${cleaned}`;
 };
 
-const ImageSlider = ({ projects }) => {
+export default function ImageSlider({ projects }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sliderImages, setSliderImages] = useState([]);
 
-  // ✅ تجهيز الصور من كل المشاريع
+  // ✅ لما المشاريع تتحدث، نجهز الصور
   useEffect(() => {
-    if (projects.length > 0) {
-      const allImages = projects
-        .flatMap((p) => p.images || [])
-        .map((img) => resolveAsset(img));
-      setSliderImages(allImages);
+    if (projects && projects.length > 0) {
+      // بناخد أول صورة من كل مشروع (أو كل الصور لو حبيت)
+      const imgs = projects
+        .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
+        .map((img) => resolveAsset(img))
+        .filter(Boolean);
+      setSliderImages(imgs);
     }
   }, [projects]);
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === sliderImages.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? sliderImages.length - 1 : prevIndex - 1
-    );
-  };
+  useEffect(() => {
+    if (sliderImages.length === 0) return;
+    const id = setInterval(() => {
+      setCurrentIndex((s) => (s + 1) % sliderImages.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [sliderImages.length]);
 
   if (sliderImages.length === 0) return null;
 
   return (
     <div className="slider-container">
-      <div className="slider">
-        <button className="arrow left" onClick={prevSlide}>
-          ❮
-        </button>
-        <img
-          src={sliderImages[currentIndex]}
-          alt={`Slide ${currentIndex}`}
-          className="slider-image"
-        />
-        <button className="arrow right" onClick={nextSlide}>
-          ❯
-        </button>
-      </div>
+      <button
+        className="prev"
+        onClick={() =>
+          setCurrentIndex(
+            (s) => (s - 1 + sliderImages.length) % sliderImages.length
+          )
+        }
+      >
+        ❮
+      </button>
 
-      <div className="dots">
-        {sliderImages.map((_, index) => (
-          <span
-            key={index}
-            className={`dot ${index === currentIndex ? "active" : ""}`}
-            onClick={() => setCurrentIndex(index)}
-          ></span>
-        ))}
-      </div>
+      <img
+        className="slider-image"
+        src={sliderImages[currentIndex]}
+        alt={`slide-${currentIndex}`}
+      />
+
+      <button
+        className="next"
+        onClick={() =>
+          setCurrentIndex((s) => (s + 1) % sliderImages.length)
+        }
+      >
+        ❯
+      </button>
     </div>
   );
-};
-
-export default ImageSlider;
+}
