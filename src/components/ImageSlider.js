@@ -4,19 +4,23 @@ export default function ImageSlider({ projects }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sliderImages, setSliderImages] = useState([]);
 
-  // ✅ نحضر الصور من كل المشاريع بعد تحميل data.json (من App.js)
+  // ✅ نجمع كل الصور من المشاريع اللي جاية من App.js (اللي فيها المسارات الصحيحة)
   useEffect(() => {
     if (projects && projects.length > 0) {
-      // الصور في App.js أصلاً فيها المسار الصحيح بـ process.env.PUBLIC_URL
-      // فإحنا هنا مش محتاجين نضيفه تاني
       const imgs = projects
         .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
+        .map((img) =>
+          img.startsWith("http")
+            ? img
+            : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
+        )
         .filter(Boolean);
+
       setSliderImages(imgs);
     }
   }, [projects]);
 
-  // ✅ التبديل بين الصور كل 3 ثواني
+  // ✅ نغير الصورة كل 3 ثواني تلقائيًا
   useEffect(() => {
     if (sliderImages.length === 0) return;
     const id = setInterval(() => {
