@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-// ✅ دالة لتصحيح المسار حسب البيئة (local أو GitHub Pages)
-const resolveAsset = (path) => {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  const cleaned = path.startsWith("/") ? path : `/${path}`;
-  return `${process.env.PUBLIC_URL}${cleaned}`;
-};
-
 export default function ImageSlider({ projects }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sliderImages, setSliderImages] = useState([]);
 
-  // ✅ لما المشاريع تتحدث، نجهز الصور
+  // ✅ نحضر الصور من كل المشاريع بعد تحميل data.json
   useEffect(() => {
     if (projects && projects.length > 0) {
-      // بناخد أول صورة من كل مشروع (أو كل الصور لو حبيت)
       const imgs = projects
         .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
-        .map((img) => resolveAsset(img))
+        // هنا بنضيف PUBLIC_URL قبل كل صورة علشان تشتغل على GitHub Pages
+        .map((img) =>
+          img.startsWith("http")
+            ? img
+            : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
+        )
         .filter(Boolean);
       setSliderImages(imgs);
     }
   }, [projects]);
 
+  // ✅ التبديل بين الصور كل 3 ثواني
   useEffect(() => {
     if (sliderImages.length === 0) return;
     const id = setInterval(() => {
@@ -50,7 +47,7 @@ export default function ImageSlider({ projects }) {
       <img
         className="slider-image"
         src={sliderImages[currentIndex]}
-        alt={`slide-${currentIndex}`}
+        alt={`Slide ${currentIndex + 1}`}
       />
 
       <button
