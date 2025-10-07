@@ -1,20 +1,26 @@
-import React, { useState, useEffect } from "react";
+// src/components/ImageSlider.jsx
+import React, { useEffect, useState } from "react";
 
-function ImageSlider({ projects }) {
+const resolveAsset = (p) => {
+  if (!p) return "";
+  if (p.startsWith("http")) return p;
+  const cleaned = p.startsWith("/") ? p : `/${p}`;
+  return `${process.env.PUBLIC_URL}${cleaned}`;
+};
+
+export default function ImageSlider({ projects }) {
+  const sliderImages = projects
+    .map((p) => (Array.isArray(p.images) && p.images.length ? p.images[0] : null))
+    .filter(Boolean);
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // هنا بنجمع أول صورة من كل مشروع
-  const sliderImages = projects
-    .map((p) => (p.images?.length > 0 ? p.images[0] : null))
-    .filter((img) => img !== null);
-
   useEffect(() => {
-    if (sliderImages.length > 0) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % sliderImages.length);
-      }, 3000);
-      return () => clearInterval(interval);
-    }
+    if (sliderImages.length === 0) return;
+    const id = setInterval(() => {
+      setCurrentIndex((s) => (s + 1) % sliderImages.length);
+    }, 3000);
+    return () => clearInterval(id);
   }, [sliderImages.length]);
 
   if (sliderImages.length === 0) return null;
@@ -23,31 +29,23 @@ function ImageSlider({ projects }) {
     <div className="slider-container">
       <button
         className="prev"
-        onClick={() =>
-          setCurrentIndex(
-            (prev) => (prev - 1 + sliderImages.length) % sliderImages.length
-          )
-        }
+        onClick={() => setCurrentIndex((s) => (s - 1 + sliderImages.length) % sliderImages.length)}
       >
         ❮
       </button>
 
       <img
-        src={sliderImages[currentIndex]}
-        alt={`slide-${currentIndex}`}
         className="slider-image"
+        src={resolveAsset(sliderImages[currentIndex])}
+        alt={`slide-${currentIndex}`}
       />
 
       <button
         className="next"
-        onClick={() =>
-          setCurrentIndex((prev) => (prev + 1) % sliderImages.length)
-        }
+        onClick={() => setCurrentIndex((s) => (s + 1) % sliderImages.length)}
       >
         ❯
       </button>
     </div>
   );
 }
-
-export default ImageSlider;

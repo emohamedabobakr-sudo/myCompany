@@ -14,10 +14,20 @@ function App() {
 
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/data.json`)
-
       .then((res) => res.json())
       .then((data) => {
-        if (data?.projects) setProjects(data.projects);
+        if (data?.projects) {
+          // ✅ نعدّل المسارات علشان الصور تشتغل بعد النشر
+          const fixedProjects = data.projects.map((p) => ({
+            ...p,
+            images: p.images?.map((img) =>
+              img.startsWith("http")
+                ? img
+                : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
+            ),
+          }));
+          setProjects(fixedProjects);
+        }
       })
       .catch((err) => console.error("Error loading projects:", err));
   }, []);
@@ -36,7 +46,7 @@ function App() {
           <p className="cjdic">{selectedProject.description}</p>
           {selectedProject.location && (
             <p className="cjdic">
-              <strong >Location:</strong> {selectedProject.location}
+              <strong>Location:</strong> {selectedProject.location}
             </p>
           )}
           {selectedProject.category && (
@@ -90,11 +100,9 @@ function App() {
 
       {page === "about" && <About />}
       {page === "portfolio" && (
-  <PortfolioGrid setSelectedProject={setSelectedProject} />
-)}
-
+        <PortfolioGrid setSelectedProject={setSelectedProject} />
+      )}
       {page === "contact" && <Contact />}
-
       <Footer />
     </div>
   );
