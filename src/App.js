@@ -81,7 +81,7 @@ function App() {
 
       {page === "home" && (
         <div>
-          <ImageSlider projects={projects} />
+        
 
           <div className="home-gallery">
             {projects.map((project) =>
