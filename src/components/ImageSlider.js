@@ -1,17 +1,16 @@
-// src/components/ImageSlider.jsx
 import React, { useEffect, useState } from "react";
 
-const resolveAsset = (p) => {
-  if (!p) return "";
-  if (p.startsWith("http")) return p;
-  const cleaned = p.startsWith("/") ? p : `/${p}`;
+const resolveAsset = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  const cleaned = path.startsWith("/") ? path : `/${path}`;
   return `${process.env.PUBLIC_URL}${cleaned}`;
 };
 
 export default function ImageSlider({ projects }) {
   const sliderImages = projects
-    .map((p) => (Array.isArray(p.images) && p.images.length ? p.images[0] : null))
-    .filter(Boolean);
+    .flatMap((p) => (Array.isArray(p.images) ? p.images : []))
+    .map((img) => resolveAsset(img));
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -29,14 +28,16 @@ export default function ImageSlider({ projects }) {
     <div className="slider-container">
       <button
         className="prev"
-        onClick={() => setCurrentIndex((s) => (s - 1 + sliderImages.length) % sliderImages.length)}
+        onClick={() =>
+          setCurrentIndex((s) => (s - 1 + sliderImages.length) % sliderImages.length)
+        }
       >
         ❮
       </button>
 
       <img
         className="slider-image"
-        src={resolveAsset(sliderImages[currentIndex])}
+        src={sliderImages[currentIndex]}
         alt={`slide-${currentIndex}`}
       />
 

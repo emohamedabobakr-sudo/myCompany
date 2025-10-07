@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 
-const resolveAsset = (p) => {
-  if (!p) return "";
-  if (p.startsWith("http")) return p;
-  const cleaned = p.startsWith("/") ? p : `/${p}`;
-  return `${process.env.PUBLIC_URL}${cleaned}`; // ✅ هنا نضيف PUBLIC_URL
+const resolveAsset = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  const cleaned = path.startsWith("/") ? path : `/${path}`;
+  return `${process.env.PUBLIC_URL}${cleaned}`;
 };
 
 const PortfolioGrid = ({ setSelectedProject }) => {
@@ -13,7 +13,7 @@ const PortfolioGrid = ({ setSelectedProject }) => {
   const [currentIndexes, setCurrentIndexes] = useState({});
 
   useEffect(() => {
-    fetch("./data.json") // ✅ نفس التعديل هنا
+    fetch(`${process.env.PUBLIC_URL}/data.json`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.projects) {
@@ -75,7 +75,7 @@ const PortfolioGrid = ({ setSelectedProject }) => {
                   </button>
 
                   <img
-                    src={resolveAsset(images[idx])}
+                    src={images[idx]}
                     alt={project.title}
                     style={{ width: "100%", height: "250px", objectFit: "cover" }}
                   />

@@ -7,24 +7,26 @@ import PortfolioGrid from "./components/PortfolioGrid";
 import ImageSlider from "./components/ImageSlider";
 import "./App.css";
 
+const resolveAsset = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  const cleaned = path.startsWith("/") ? path : `/${path}`;
+  return `${process.env.PUBLIC_URL}${cleaned}`;
+};
+
 function App() {
   const [page, setPage] = useState("home");
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
-    fetch("./data.json") // ✅ استخدم المسار النسبي بدل process.env.PUBLIC_URL
+    fetch(`${process.env.PUBLIC_URL}/data.json`)
       .then((res) => res.json())
       .then((data) => {
         if (data?.projects) {
-          // ✅ نضيف المسار الكامل للصور بناءً على PUBLIC_URL
           const fixedProjects = data.projects.map((p) => ({
             ...p,
-            images: p.images?.map((img) =>
-              img.startsWith("http")
-                ? img
-                : `${process.env.PUBLIC_URL}${img.startsWith("/") ? img : "/" + img}`
-            ),
+            images: p.images?.map((img) => resolveAsset(img)),
           }));
           setProjects(fixedProjects);
         }
@@ -32,6 +34,7 @@ function App() {
       .catch((err) => console.error("Error loading projects:", err));
   }, []);
 
+  // ✅ صفحة تفاصيل المشروع
   if (selectedProject) {
     return (
       <div>
@@ -71,6 +74,7 @@ function App() {
     );
   }
 
+  // ✅ الصفحة الرئيسية
   return (
     <div>
       <Navbar setPage={setPage} />
